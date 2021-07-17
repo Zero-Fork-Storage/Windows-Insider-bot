@@ -55,7 +55,7 @@ class Controller:
             self.log.info(f"[*] Checking if Discord Bot token exists...")
             time.sleep(3)
             self.log.error("[*] Discord Bot Token is not found.")
-            self.log.info(f"[*] Terminate the startup process.")
+            self.log.info(f"[*] Terminate startup process.")
             exit(1)
         else:
             self.log.info(f"[*] Checking if Discord Bot token exists... pass")
@@ -63,7 +63,7 @@ class Controller:
             self.log.info(f"[*] Checking if MongoDB server ip exists...")
             time.sleep(3)
             self.log.error("[*] MongoDB Server IP is not found.")
-            self.log.info(f"[*] Terminate the startup process.")
+            self.log.info(f"[*] Terminate startup process.")
             exit(1)
         else:
             self.log.info(f"[*] Checking if MongoDB server  exists... pass")
@@ -71,7 +71,7 @@ class Controller:
             self.log.info(f"[*] Checking if MongoDB Server port exists...")
             time.sleep(3)
             self.log.error("[*] MongoDB server port is not found.")
-            self.log.info(f"[*] Terminate the startup process.")
+            self.log.info(f"[*] Terminate startup process.")
             exit(1)
         else:
             self.log.info(f"[*] Checking if MongoDB Server port exists... pass")
