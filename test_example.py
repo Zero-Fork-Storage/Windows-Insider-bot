@@ -1,12 +1,13 @@
 import re
 import asyncio
 import xmltodict
+import requests
 
 from dateutil.parser import parse as date_parse
 from aiohttp.client import ClientSession
 from pymongo import MongoClient
 from bs4 import BeautifulSoup
-
+import opengraph_py3
 
 url = "https://blogs.windows.com/windows-insider/feed/"
 user_agent = {
@@ -46,6 +47,49 @@ for i in a:
     description = parse_text(i["description"])
     stroge.append(dict(title=title, link=link, pubDate=pubDate, description=description))
 
+
+ad = stroge[0]["link"]
+
+r = requests.get(url=ad, headers=user_agent)
+
+soup = BeautifulSoup(r.text, 'lxml')
+# data holder
+data = {
+    "tag": {},
+    "ogp": {}
+}
+# find all the meta tags in the web page
+for i in soup.find_all("meta"):
+    # extract individual tag with the property value
+    if i.get("property", None) == "og:title":
+        data["tag"]["title"] = i
+        data["ogp"]["title"] = i.get("content", None)
+    if i.get("property", None) == "og:url":
+        data["tag"]["url"] = i
+        data["ogp"]["url"] = i.get("content", None)
+    if i.get("property", None) == "og:description":
+        data["tag"]["description"] = i
+        data["ogp"]["description"] = i.get("content", None)
+    if i.get("property", None) == "og:image":
+        data["tag"]["image"] = i
+        data["ogp"]["image"] = i.get("content", None)
+    if i.get("property", None) == "og:type":
+        data["tag"]["type"] = i
+        data["ogp"]["type"] = i.get("content", None)
+    if i.get("property", None) == "og:site_name":
+        data["tag"]["site_name"] = i
+        data["ogp"]["site_name"] = i.get("content", None)
+    if i.get("property", None) == "og:locale":
+        data["tag"]["locale"] = i
+        data["ogp"]["locale"] = i.get("content", None)
+
+print(data["ogp"]["image"])
+def pprint(data):
+    import ujson
+    json = ujson.dumps(data, sort_keys=True, indent=4, escape_forward_slashes=False)
+    print(json)
+
+"""
 client = MongoClient('localhost', 27017)
 db = client["WIB"]
 last_feed = db.last_feed
@@ -68,3 +112,4 @@ if source == stroge:
 else:
     print("Change")
     last_feed.update_one({"feeds": source}, {"$set": {"feeds": stroge}})
+"""
