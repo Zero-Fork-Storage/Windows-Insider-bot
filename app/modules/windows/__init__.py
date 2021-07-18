@@ -8,7 +8,7 @@ from pymongo import MongoClient
 from bs4 import BeautifulSoup
 
 
-class InsiderFeed:
+class Windows:
     def __init__(self, host_name: str, host_port: int):
         self.logger = Logger.generate_log()
         self.host_name = host_name
@@ -73,6 +73,12 @@ class InsiderFeed:
                     raise RuntimeError("Invalid status code: {0}".format(response.status))
                 return await response.read()
 
+    async def create_engine(self) -> MongoClient:
+        """create a MongoClient instance"""
+        client = MongoClient(host=self.host_name, port=self.host_port)
+        return client
+
+
     @Logger.set()
     async def parseFeed(self) -> dict:
         """parses the feed"""
@@ -88,7 +94,7 @@ class InsiderFeed:
             description = self.parse_text(i["description"])
             stroge.append(dict(title=title, link=link, pubDate=pubDate, description=description))
 
-        client = MongoClient(host=self.host_name, port=self.host_port)
+        client = await self.create_engine()
         db = client["WIB"]
         last_feed = db.last_feed
         source = last_feed.find_one().get("feeds")

@@ -1,5 +1,6 @@
 ujson==4.0.2
 xmltodict==0.12.0
+requests==2.26.0
 aiohttp[speedups]==3.7.4
 discord.py==1.7.3
 rich==10.6.0
