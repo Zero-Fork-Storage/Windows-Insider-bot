@@ -4,8 +4,7 @@ from typing import Optional
 from itertools import cycle
 from discord.ext import tasks
 from discord.ext.commands import Bot
-from discord.ext.commands import HelpCommand
-
+from app.services.logger import Logger
 
 class WindowsInsider(Bot):
     """Windows Insider Core System"""
@@ -29,7 +28,7 @@ class WindowsInsider(Bot):
         :param message: Discord BOT status Message
         :param version: Discord BOT Version
         """
-
+        self.logger = Logger.generate_log()
         self.discord_token = discord_token
         self.owner_id = owner_id
         self.command_prefix = command_prefix
@@ -51,10 +50,14 @@ class WindowsInsider(Bot):
             status=discord.Status.online, 
             activity=discord.Game(next(cycle(self.message)))
         )
-        
     
+    @Logger.set()
     def lanuch(self) -> None:
         """Launch Windows Insider BOT"""
-        self.run(self.discord_token)
+        try:
+            self.run(self.discord_token)
+        except RuntimeError as e:
+            self.logger.error(f'[*] {e}')
+            
 
         

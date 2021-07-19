@@ -75,7 +75,7 @@ class Windows:
 
     async def create_engine(self) -> MongoClient:
         """create a MongoClient instance"""
-        client = MongoClient(host=self.host_name, port=self.host_port)
+        client = MongoClient(host=self.host_name, port=self.host_port, serverSelectionTimeoutMS=10)
         return client
 
 

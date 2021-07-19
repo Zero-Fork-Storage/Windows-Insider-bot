@@ -38,7 +38,7 @@ class Logger:
         return logger
 
     @classmethod
-    def set(cls, logger=None):
+    def set(cls, logger=None, debug=False):
         """
         We create a parent function to take arguments
         :return: log
@@ -51,14 +51,15 @@ class Logger:
             def wrapper(*args, **kwargs):
                 try:
                     if kwargs != {}:
-                        logger.debug(msg=kwargs)
-
+                        if debug:
+                            logger.debug(msg=f"[*] {kwargs}")
                     result = func(*args, **kwargs)
                     if result is not None:
-                        logger.debug(msg=result)
+                        if debug:
+                            logger.debug(msg=f"[*] {result}")
                     return result
                 except:
-                    logger.exception(msg=f"There was an exception in {func.__name__}", exc_info=False)
+                    logger.exception(msg=f"[*] There was an exception in {func.__name__}", exc_info=False)
                     raise
             return wrapper
         return error_log
