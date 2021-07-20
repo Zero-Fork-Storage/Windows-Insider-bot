@@ -6,18 +6,21 @@ from discord.ext.commands import Cog
 from discord.ext.commands import Context
 from pymongo.errors import ConnectionFailure
 from app.services.logger import  Logger
+from app.modules.windows import Windows
+from app.modules.permissions import is_guild_owner
+from app.extension.database import DATABASES
 from app.config import MONGODB_SERVER_IP
 from app.config import MONGODB_SERVER_PORT
-from app.modules.windows import Windows
-from app.extension.database import DATABASES
+
 
 class RSS(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
         self.logger = Logger.generate_log()
         self.task = self.update_feed.start()
-
+    
     @commands.command("subscribe")
+    @commands.check(is_guild_owner())
     async def subscribe(self, ctx: Context):
         """
         Subscribe to a feed
@@ -31,6 +34,7 @@ class RSS(Cog):
             await ctx.send(f"{ctx.author.mention}, you are already subscribed to Windows Insider news")
 
     @commands.command("unsubscribe")
+    @commands.check(is_guild_owner())
     async def unsubscribe(self, ctx: Context):
         """Unsubscribe from a feed"""
         db = DATABASES(host_name=str(MONGODB_SERVER_IP), host_port=int(MONGODB_SERVER_PORT))
