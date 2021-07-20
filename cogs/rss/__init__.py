@@ -20,7 +20,7 @@ class RSS(Cog):
         self.task = self.update_feed.start()
     
     @commands.command("subscribe")
-    @commands.check(is_guild_owner())
+    @is_guild_owner()
     async def subscribe(self, ctx: Context):
         """
         Subscribe to a feed
@@ -34,7 +34,7 @@ class RSS(Cog):
             await ctx.send(f"{ctx.author.mention}, you are already subscribed to Windows Insider news")
 
     @commands.command("unsubscribe")
-    @commands.check(is_guild_owner())
+    @is_guild_owner()
     async def unsubscribe(self, ctx: Context):
         """Unsubscribe from a feed"""
         db = DATABASES(host_name=str(MONGODB_SERVER_IP), host_port=int(MONGODB_SERVER_PORT))
