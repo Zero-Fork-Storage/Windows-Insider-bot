@@ -97,19 +97,21 @@ class Windows:
         client = await self.create_engine()
         db = client["WIB"]
         last_feed = db.last_feed
-        source = last_feed.find_one()
-        if source == None:
+        try:
+            source = last_feed.find_one().get("feeds")
+        except Exception as e:
+            self.logger.error(f"[*] {e}")
             last_feed.insert_one({"feeds": stroge})
             raise RuntimeError("No previous feed found")
 
-        data = source.get("feeds")
-
-        if data == stroge:
-            # self.logger.info("No Change")
+        
+        self.logger.debug(source == stroge)
+        if source == stroge:
+            self.logger.info("No Change")
             # return {"return": True, "feeds": stroge}
             return {"return": False, "feeds": None}
         else:
-            # self.logger.info("Change")
+            self.logger.info("Change")
             last_feed.update_one({"feeds": source}, {"$set": {"feeds": stroge}})
             return {"return": True, "feeds": stroge}
                   
