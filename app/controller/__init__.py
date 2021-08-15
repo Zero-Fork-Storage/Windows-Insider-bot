@@ -1,5 +1,5 @@
 import time
-
+from itertools import cycle
 from typing import List, Optional
 from app.services import WindowsInsider
 from app.services.logger import Logger
@@ -16,6 +16,9 @@ from app.config import (
 
 
 class Controller:
+    __slots__ = [
+        "message"
+    ]
     def __init__(self) -> None:
         self.log = Logger.generate_log()
 
@@ -31,6 +34,9 @@ class Controller:
         self.log.info(f"[*] CID: {str(self.controller.user.id)}")
         self.log.info(f"[*] Copyright (C) 2021 zeroday0619")
         self.log.info("------------------------------------------------------------")
+        self.log.info(f"[*] {self.controller.user.name} bot are being used by {len(self.controller.guilds)} servers.")
+        for server in self.controller.guilds:
+            self.log.info(f"[*] Server connected to: {server.name}")
         self.log.info(f"[*] Completed!")
         await self.controller.change_status.start()
 
@@ -87,6 +93,6 @@ class Controller:
             command_prefix="+",
             case_insensitive=True,
             description="Windows Insider news",
-            message=["+help", "문의: zeroday0619#2080"],
+            message=cycle(["+help", "문의: zeroday0619#2080"]),
             version="BETA 1.0.0"
         )

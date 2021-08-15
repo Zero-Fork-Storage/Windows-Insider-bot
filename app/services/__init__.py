@@ -1,7 +1,7 @@
 import discord
 from typing import List
-from typing import Optional
 from itertools import cycle
+from typing import Optional
 from discord.ext import tasks
 from discord.ext.commands import Bot
 from app.services.logger import Logger
@@ -11,11 +11,11 @@ class WindowsInsider(Bot):
     def __init__(
         self, 
         discord_token: str, 
+        message,
         owner_id: Optional[int] = None,
         command_prefix: Optional[str] = None,
         case_insensitive: bool = True,
         description: Optional[str] = None,
-        message: Optional[List[str]] = None,
         version: Optional[str] = None
     ) -> None:
         """Initialize Windows Insider Bot
@@ -43,12 +43,12 @@ class WindowsInsider(Bot):
             description=self.description,
         )
     
-    @tasks.loop(seconds=10)
+    @tasks.loop(seconds=25)
     async def change_status(self) -> None:
         """Change BOT Status"""
         await self.change_presence(
             status=discord.Status.online, 
-            activity=discord.Game(next(cycle(self.message)))
+            activity=discord.Game(next(self.message))
         )
     
     @Logger.set()
